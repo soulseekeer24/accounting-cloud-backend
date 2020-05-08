@@ -1,9 +1,8 @@
 package company
 
 import (
-	company "piwi-backend-clean/company/domain"
+	"piwi-backend-clean/company/domain"
 )
-
 
 func (c *useCase) Create(company *company.Company) (companyStored *company.Company, err error) {
 
