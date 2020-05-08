@@ -2,6 +2,7 @@ package company
 
 import (
 	"piwi-backend-clean/company/domain"
+	"time"
 )
 
 func (c *useCase) Create(company *company.Company) (companyStored *company.Company, err error) {
@@ -10,6 +11,8 @@ func (c *useCase) Create(company *company.Company) (companyStored *company.Compa
 		return nil, err
 	}
 
+	company.CreatedAt = time.Now().Unix()
+	
 	if companyStored, err = c.repository.Store(company); err != nil {
 		return nil, err
 	}
