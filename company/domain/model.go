@@ -1,7 +1,5 @@
 package company
 
-import "time"
-
 type Company struct {
 	ID                      string `json:"id" bson:"_id"`
 	Name                    string `json:"name" bson:"name"`

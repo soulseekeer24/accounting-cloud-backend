@@ -12,7 +12,7 @@ func (c *useCase) Create(company *company.Company) (companyStored *company.Compa
 	}
 
 	company.CreatedAt = time.Now().Unix()
-	
+
 	if companyStored, err = c.repository.Store(company); err != nil {
 		return nil, err
 	}
