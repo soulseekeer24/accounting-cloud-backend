@@ -10,6 +10,11 @@ type Company struct {
 }
 
 func (c *Company) IsValid() (bool, error) {
+
+	c.
+
+
+
 	c.CreatedAt = time.Now().Unix()
 	return true, nil
 }
