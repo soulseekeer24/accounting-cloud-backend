@@ -2,6 +2,6 @@ package company
 
 import company "piwi-backend-clean/company/domain"
 
-func (c *UseCase) FindAll() (companies []company.Company, err error) {
+func (c *useCase) FindAll() (companies []company.Company, err error) {
 	return c.repository.GetAll()
 }

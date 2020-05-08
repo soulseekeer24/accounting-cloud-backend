@@ -5,7 +5,7 @@ import (
 )
 
 
-func (c *UseCase) Create(company *company.Company) (companyStored *company.Company, err error) {
+func (c *useCase) Create(company *company.Company) (companyStored *company.Company, err error) {
 
 	if _, err = company.IsValid(); err != nil {
 		return nil, err
