@@ -2,8 +2,10 @@ package utils
 
 import (
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 
-
+	"piwi-backend-clean/authentication/core"
+	"piwi-backend-clean/authentication/core/domains/accounts"
 )
 
 var secretSign = []byte("secretclae")
@@ -12,7 +14,7 @@ type JWTTokenManager struct{}
 
 func (t JWTTokenManager) GenerateToken(account *accounts.Account, profileID string) (token string, err error) {
 
-	claims := auth.TokenClaims{
+	claims := core.TokenClaims{
 		AccountID: account.ID,
 		ProfileID: profileID,
 	}
@@ -27,10 +29,10 @@ func (t JWTTokenManager) GenerateToken(account *accounts.Account, profileID stri
 }
 
 // ValidateToken use to validate json token ang get claims data
-func (t JWTTokenManager) ValidateToken(tokenString string) (claims *auth.TokenClaims, err error) {
+func (t JWTTokenManager) ValidateToken(tokenString string) (claims *core.TokenClaims, err error) {
 
 	// Parse the token
-	claims = &auth.TokenClaims{}
+	claims = &core.TokenClaims{}
 	tk, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		// since we only use the one private key to sign the tokens,
 		// we also only use its public counter part to verify
