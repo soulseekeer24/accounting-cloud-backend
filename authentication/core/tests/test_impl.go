@@ -1,6 +1,9 @@
 package tests
 
-import "piwi-backend-clean/authentication/core/domains/accounts"
+import (
+	"piwi-backend-clean/authentication/core"
+	"piwi-backend-clean/authentication/core/domains/accounts"
+)
 
 type TestEncripter struct{}
 
@@ -23,7 +26,7 @@ type MuckTokenManager struct{}
 func (t MuckTokenManager) GenerateToken(account *accounts.Account, profileID string) (token string, err error) {
 	return "token_lol", nil
 }
-func (t MuckTokenManager) ValidateToken(token string) (claims *auth.TokenClaims, err error) {
+func (t MuckTokenManager) ValidateToken(token string) (claims *core.TokenClaims, err error) {
 
 	return
 }

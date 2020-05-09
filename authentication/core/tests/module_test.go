@@ -2,6 +2,9 @@ package tests
 
 import (
 	"context"
+	"piwi-backend-clean/authentication/core"
+	"piwi-backend-clean/authentication/core/domains/accounts"
+	"piwi-backend-clean/authentication/core/dto"
 	"testing"
 
 )
@@ -17,14 +20,14 @@ var profileMuck = &MuckProfileModule{
 }
 var ctx = context.Background()
 
-type ModuleTestFunction func(s *auth.Module, t *testing.T)
+type ModuleTestFunction func(s *core.Module, t *testing.T)
 
 type TestCase struct {
 	Name     string
 	Callback ModuleTestFunction
 }
 
-func ModuleSuite(s *auth.Module, t *testing.T) {
+func ModuleSuite(s *core.Module, t *testing.T) {
 	tc := []TestCase{
 		{Name: "create new accounts", Callback: CreateAccountSuccessTest},
 		{Name: "attemp to create already existing accounts", Callback: CreateAlreadyExistingAccountTest},
@@ -40,7 +43,7 @@ func ModuleSuite(s *auth.Module, t *testing.T) {
 	}
 }
 
-func CreateAccountSuccessTest(s *auth.Module, t *testing.T) {
+func CreateAccountSuccessTest(s *core.Module, t *testing.T) {
 
 	rd := dto.RegisterUser{
 		FirstName: "Miguel",
@@ -60,7 +63,7 @@ func CreateAccountSuccessTest(s *auth.Module, t *testing.T) {
 	}
 }
 
-func CreateAlreadyExistingAccountTest(s *auth.Module, t *testing.T) {
+func CreateAlreadyExistingAccountTest(s *core.Module, t *testing.T) {
 	//prepare
 	rd := dto.RegisterUser{
 		FirstName: "Miguel",
@@ -83,7 +86,7 @@ func CreateAlreadyExistingAccountTest(s *auth.Module, t *testing.T) {
 	}
 }
 
-func LoginUnVerifiedAccount(s *auth.Module, t *testing.T) {
+func LoginUnVerifiedAccount(s *core.Module, t *testing.T) {
 	creds := dto.LoginAccount{Username: "username1", Password: "password123"}
 	_, err := s.Authenticate(ctx, &creds)
 
@@ -97,7 +100,7 @@ func LoginUnVerifiedAccount(s *auth.Module, t *testing.T) {
 		t.Errorf("expected [%v] to be [UnverifiedAccountError]", te)
 	}
 }
-func LoginVerifiedAccount(s *auth.Module, t *testing.T) {
+func LoginVerifiedAccount(s *core.Module, t *testing.T) {
 	creds := dto.LoginAccount{Username: "username1", Password: "password123"}
 	_, err := s.Authenticate(ctx, &creds)
 	if err != nil {
@@ -105,7 +108,7 @@ func LoginVerifiedAccount(s *auth.Module, t *testing.T) {
 	}
 }
 
-func VerifiedAccountSuccess(s *auth.Module, t *testing.T) {
+func VerifiedAccountSuccess(s *core.Module, t *testing.T) {
 	_, err := s.ValidateAccount(ctx, "key-has")
 
 	if err != nil {
@@ -117,7 +120,7 @@ func TestModule(t *testing.T) {
 
 	encrypter := &TestEncripter{}
 	tokenManager := MuckTokenManager{}
-	module := auth.NewAuthentication(store, encrypter, tokenManager)
+	module := core.NewAuthentication(store, encrypter, tokenManager)
 	module.ConnectToProfiles(profileMuck)
 	ModuleSuite(module, t)
 }

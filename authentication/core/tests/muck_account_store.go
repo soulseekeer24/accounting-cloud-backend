@@ -31,7 +31,7 @@ func (r *MuckRepository) GetAccountsByValidationHash(ctx context.Context, hash s
 		}
 	}
 	if account == nil {
-		return nil, accounts.AccountDontExist{}
+		return nil, accounts.ErrAccountDontExist{}
 	}
 
 	return
@@ -55,7 +55,7 @@ func GetAccountsByUserName(ctx context.Context, username string) (account *accou
 		}
 	}
 	if account == nil {
-		return nil, accounts.AccountDontExist{}
+		return nil, accounts.ErrAccountDontExist{}
 	}
 
 	return
