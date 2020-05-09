@@ -1,18 +1,16 @@
 package authentication
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/go-chi/chi"
+	"go.mongodb.org/mongo-driver/mongo"
 	"piwi-backend-clean/authentication/core"
 	"piwi-backend-clean/authentication/infrastructure/controllers"
 	"piwi-backend-clean/authentication/infrastructure/persistency"
 	"piwi-backend-clean/authentication/infrastructure/utils"
-
 )
 
-const DB_URI = "mongodb://localhost:27017"
 
-	func BuildAuthModule(client *mongo.Client, r *gin.IRouter) *core.Module {
+func BuildAuthModule(client *mongo.Client, r *chi.Mux) *core.Module {
 
 	mongoCredsRepo := persistency.NewMongoDBAccountsRepository(client.Database("m_market").Collection("accounts"))
 	bcryptEncrypter := utils.BcryptEncripter{}
@@ -24,10 +22,10 @@ const DB_URI = "mongodb://localhost:27017"
 
 	//we add endpoints here to mux
 
-	//r.HandleFunc("/signin", httpController.Signin).Methods("POST", "OPTIONs")
-	//r.HandleFunc("/signup", httpController.SignUp).Methods("POST", "OPTIONs")
-	//r.HandleFunc("/validate/{validation_code}", httpController.ValidateAccount).Methods("get")
+	r.Post("/auth/signin", httpController.Signin)
+	r.Post("/auth/signup", httpController.SignUp)
+	r.Get("/auth/validate/{validation_code}", httpController.ValidateAccount)
 
-	http.Handle("/", r)
+
 	return auth
 }
