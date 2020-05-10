@@ -40,7 +40,7 @@ func (a *HttpController) Me(w http.ResponseWriter, r *http.Request) {
 
 func (a *HttpController) CreateProfile(w http.ResponseWriter, r *http.Request) {
 	var profile profiles.Profile
-	err := json.NewDecoder(r).Decode(&profile)
+	err := json.NewDecoder(r.Body).Decode(&profile)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
