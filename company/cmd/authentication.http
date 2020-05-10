@@ -4,12 +4,12 @@ Accept: application/json
 
 {
   "password":"password",
-  "username":"teste3",
-  "email":"tst@te3st.com"
+  "username":"contador",
+  "email":"contador@correo.com"
 }
 
 ### verify account
-GET http://localhost:8000/auth/validate/hash
+GET http://localhost:8000/auth/validate/randomSeed-hash
 
 ### Sign in request
 POST http://localhost:8000/auth/signin
@@ -17,7 +17,7 @@ Accept: application/json
 
 {
   "password":"password",
-  "username":"teste"
+  "username":"contador"
 }
 
 
