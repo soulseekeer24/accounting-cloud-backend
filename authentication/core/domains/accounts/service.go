@@ -64,7 +64,7 @@ func (cs *Service) CreateAccount(ctx context.Context, account *Account) (keys *N
 	account.Status = Unverified
 
 	// Here w use the encryter to create a validation hash
-	hash, err := cs.encrypter.GenerateValidationHash("randomSeed", "SEED")
+	hash, err := cs.encrypter.GenerateValidationHash(account.Email, account.ID)
 	if err != nil {
 		return nil, err
 	}

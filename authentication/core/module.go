@@ -5,13 +5,11 @@ import (
 	"fmt"
 	"piwi-backend-clean/authentication/core/domains/accounts"
 	"piwi-backend-clean/authentication/core/dto"
-	"piwi-backend-clean/authentication/core/external"
 )
 
 type Module struct {
 	AccountsService *accounts.Service
 	tokenManager    TokenManager
-	profileModule   external.ProfileModule
 }
 
 func NewAuthentication(accountRepository accounts.Repository, encrypter accounts.Encrypter, tokenManager TokenManager) *Module {
@@ -55,12 +53,10 @@ func (m *Module) Authenticate(ctx context.Context, loginAccount *dto.LoginAccoun
 }
 
 func (m *Module) ValidateAccount(ctx context.Context, hash string) (success bool, err error) {
-	account, err := m.AccountsService.ValidateAccountWithHash(ctx, hash)
+	_, err = m.AccountsService.ValidateAccountWithHash(ctx, hash)
 	if err != nil {
 		return false, err
 	}
-	//Once the acccount its validated we procced to mark the email as valid
-	m.profileModule.ValidateEmail(account.ID)
 
 	return true, nil
 }
@@ -69,6 +65,4 @@ func (m *Module) ValidateToken(ctx context.Context, token string) (claims *Token
 	return m.tokenManager.ValidateToken(token)
 }
 
-func (m *Module) ConnectToProfiles(pm external.ProfileModule) {
-	m.profileModule = pm
-}
+
