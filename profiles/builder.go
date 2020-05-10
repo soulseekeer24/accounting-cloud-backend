@@ -16,7 +16,8 @@ func BuildModule(client *mongo.Client, r *chi.Mux) *core.Module {
 	//Http Controller
 	httpController := gateway.NewHttpController(users)
 
-	r.Get("/profiles/me", httpController.Me).
+	r.Get("/profiles/me", httpController.Me)
+	r.Post("/profiles",httpController.CreateProfile)
 
 	return users
 }

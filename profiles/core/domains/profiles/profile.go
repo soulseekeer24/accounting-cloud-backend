@@ -20,6 +20,7 @@ type Profile struct {
 	AccountID string        `json:"account_id" bson:"account_id,omitempty"`
 	FirstName string        `json:"firstname" bson:"firstname,omitempty"`
 	LastName  string        `json:"lastname" bson:"lastname,omitempty"`
+	CreatedAt int64         `json:"created_at" bson:"created_at,omitempty"`
 	Contacts  []ContactInfo `json:"contacts" bson:"contacts,omitempty"`
 	Roles     []Roles       `json:"roles" bson:"roles,omitempty"`
 	Address   []Address     `json:"address" bson:"address,omitempty"`

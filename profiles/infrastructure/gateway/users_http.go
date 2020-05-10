@@ -4,14 +4,18 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	users "piwi-backend-clean/authentication/profiles/core"
+	"piwi-backend-clean/profiles/core"
+	"piwi-backend-clean/profiles/core/domains/profiles"
 )
 
 type HttpController struct {
-	users *users.Module
+	users *core.Module
+}
+type ReqUser struct {
+	AccountID string
 }
 
-func NewHttpController(users *users.Module) *HttpController {
+func NewHttpController(users *core.Module) *HttpController {
 	return &HttpController{users: users}
 }
 
@@ -19,7 +23,7 @@ func (a *HttpController) Me(w http.ResponseWriter, r *http.Request) {
 	if user := r.Context().Value("user"); user != nil {
 		w.WriteHeader(http.StatusOK)
 		fmt.Printf("accountID %v", user)
-		profile, err := a.users.GetAccountProfile(r.Context(), user.(*auth.TokenClaims).AccountID)
+		profile, err := a.users.GetAccountProfile(r.Context(), user.(*ReqUser).AccountID)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -32,4 +36,22 @@ func (a *HttpController) Me(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Not Logged in"))
 	}
 
+}
+
+func (a *HttpController) CreateProfile(w http.ResponseWriter, r *http.Request) {
+	var profile profiles.Profile
+	err := json.NewDecoder(r).Decode(&profile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	ID,err := a.users.CreateNewUserProfile(r.Context(),&profile)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	profile.ID = ID
+	json.NewEncoder(w).Encode(profile)
 }

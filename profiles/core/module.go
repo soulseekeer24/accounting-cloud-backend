@@ -20,7 +20,7 @@ func (m *Module) CreateNewUserProfile(ctx context.Context, p *profiles.Profile) 
 	return m.profileService.CreateProfile(ctx, p)
 }
 
-func (m *Module) GetAccountProfile(ctx context.Context, accountID string) (ID *profiles.Profile, err error) {
+func (m *Module) GetAccountProfile(ctx context.Context, accountID string) (profile *profiles.Profile, err error) {
 	return m.profileService.GetProfileByAccountID(ctx, accountID)
 }
 

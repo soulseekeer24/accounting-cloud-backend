@@ -2,6 +2,7 @@ package profiles
 
 import (
 	"context"
+	"time"
 )
 
 type Service struct {
@@ -22,7 +23,7 @@ func (s *Service) CreateProfile(ctx context.Context, profile *Profile) (ID strin
 	//We set as main a unferevied the first contact info
 	profile.Contacts[0].ItsMain = true
 	profile.Contacts[0].ItsVerified = false
-
+	profile.CreatedAt = time.Now().Unix()
 	ID, err = s.profileStore.StoreProfile(ctx, profile)
 	if err != nil {
 		return "", err
