@@ -1,4 +1,4 @@
-package errors
+package common
 
 import "fmt"
 
@@ -12,10 +12,10 @@ func (e MissingField) Error() string {
 }
 
 // MissingField error when a object dont have all required fields
-type DontExist struct {
+type ErrDontExist struct {
 	Query string
 }
 
-func (e DontExist) Error() string {
+func (e ErrDontExist) Error() string {
 	return fmt.Sprintf("Object dont exist @Query: [%v] ", e.Query)
 }

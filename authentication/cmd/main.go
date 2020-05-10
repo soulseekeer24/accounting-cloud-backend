@@ -32,13 +32,14 @@ func main(){
 	go func() {
 		fmt.Println("Listening on port :8000")
 		errs <- http.ListenAndServe(":8000", r)
-
 	}()
+
 	go func() {
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, syscall.SIGINT)
 		errs <- fmt.Errorf("%s", <-c)
 	}()
+
 	fmt.Printf("Terminated %s", <-errs)
 }
 

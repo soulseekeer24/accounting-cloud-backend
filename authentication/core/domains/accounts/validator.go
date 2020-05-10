@@ -10,8 +10,8 @@ func (v *Validator) ValidateAccount(cred *Account) (err error) {
 		return EmptyPasswordError
 	}
 
-	if cred.Username == "" {
-		return EmptyUsernameError
+	if cred.Email == "" {
+		return
 	}
 
 	return nil

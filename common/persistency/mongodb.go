@@ -1,15 +1,15 @@
-package repositories
+package persistency
 
 import (
+	"context"
 	"fmt"
 	"log"
+	"piwi-backend-clean/common"
 	"reflect"
-	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"piwi-backend-clean/common/errors"
 )
 
 type MongoDB struct {
@@ -64,7 +64,7 @@ func (r MongoDB) GetBy(ctx context.Context, query interface{}, output interface{
 	if err != nil {
 		switch err.Error() {
 		case "mongo: no documents in result":
-			return errors.DontExist{}
+			return common.ErrDontExist{}
 		default:
 			return err
 		}

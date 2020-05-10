@@ -1,4 +1,4 @@
-package repositories
+package persistency
 
 import (
 	"context"

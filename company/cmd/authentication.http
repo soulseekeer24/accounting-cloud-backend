@@ -1,0 +1,23 @@
+### SignUp request
+POST http://localhost:8000/auth/signup
+Accept: application/json
+
+{
+  "password":"password",
+  "username":"teste3",
+  "email":"tst@te3st.com"
+}
+
+### verify account
+GET http://localhost:8000/auth/validate/hash
+
+### Sign in request
+POST http://localhost:8000/auth/signin
+Accept: application/json
+
+{
+  "password":"password",
+  "username":"teste"
+}
+
+

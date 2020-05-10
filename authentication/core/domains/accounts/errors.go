@@ -40,3 +40,8 @@ type UnverifiedAccountError struct{}
 func (e UnverifiedAccountError) Error() string {
 	return fmt.Sprintf("Unverified Account.")
 }
+
+type ErrMissingEmail struct{}
+func (e ErrMissingEmail) Error() string {
+	return fmt.Sprintf("account doesn't exist.")
+}

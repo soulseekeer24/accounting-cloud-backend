@@ -12,11 +12,10 @@ var secretSign = []byte("secretclae")
 
 type JWTTokenManager struct{}
 
-func (t JWTTokenManager) GenerateToken(account *accounts.Account, profileID string) (token string, err error) {
+func (t JWTTokenManager) GenerateToken(account *accounts.Account) (token string, err error) {
 
 	claims := core.TokenClaims{
 		AccountID: account.ID,
-		ProfileID: profileID,
 	}
 
 	jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

@@ -23,19 +23,23 @@ func NewService(accountRepository Repository, encrypter Encrypter) *Service {
 
 // CreateAccount create a account with the pass it username and password it response
 // a keys that contains the ValidationHash required to validate the account
-func (cs *Service) CreateAccount(ctx context.Context, username, password string) (keys *NewAccountKeys, err error) {
-
-	creds := &Account{Username: username, Password: password}
+func (cs *Service) CreateAccount(ctx context.Context, account *Account) (keys *NewAccountKeys, err error) {
+	// Avoid pass and id field
+	account.ID=""
 
 	// need to validate the data that its comming here
-	err = cs.accountsValidator.ValidateAccount(creds)
+	err = cs.accountsValidator.ValidateAccount(account)
 	if err != nil {
 		return nil, err
 	}
 
+	if account.Username == "" {
+		account.Username = account.Email
+	}
+
 	// Check if there its already a account to that username if its the case it will
 	// it will get a AlreadyExistUsernameError
-	accounts, err := cs.accountRepository.GetAccountsByUserName(ctx, username)
+	accounts, err := cs.accountRepository.GetAccountsByUserName(ctx, account.Username)
 	if err != nil {
 		switch err.(type) {
 		case ErrAccountDontExist:
@@ -51,13 +55,13 @@ func (cs *Service) CreateAccount(ctx context.Context, username, password string)
 	}
 
 	// Hash and change the password to be stored as a hash
-	passwordHash, err := cs.encrypter.HashPassword(creds.Password)
+	passwordHash, err := cs.encrypter.HashPassword(account.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	creds.Password = passwordHash
-	creds.Status = Unverified
+	account.Password = passwordHash
+	account.Status = Unverified
 
 	// Here w use the encryter to create a validation hash
 	hash, err := cs.encrypter.GenerateValidationHash("randomSeed", "SEED")
@@ -65,9 +69,9 @@ func (cs *Service) CreateAccount(ctx context.Context, username, password string)
 		return nil, err
 	}
 
-	creds.ValidationHash = hash
+	account.ValidationHash = hash
 
-	ID, err := cs.accountRepository.SaveAccount(ctx, creds)
+	ID, err := cs.accountRepository.SaveAccount(ctx, account)
 	if err != nil {
 		return nil, err
 	}
