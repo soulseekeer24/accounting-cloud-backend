@@ -8,7 +8,7 @@ import (
 	"piwi-backend-clean/profiles/infrastructure/persistency"
 )
 
-func BuildUsersModule(client *mongo.Client, r *chi.Mux) *core.Module {
+func BuildModule(client *mongo.Client, r *chi.Mux) *core.Module {
 
 	mongoStore := persistency.NewMongoDBProfileStoreRepository(client.Database("accounting-app"))
 	users := core.BuildModule(mongoStore)
