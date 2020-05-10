@@ -12,7 +12,7 @@ import (
 
 func BuildAuthModule(client *mongo.Client, r *chi.Mux) *core.Module {
 
-	mongoCredsRepo := persistency.NewMongoDBAccountsRepository(client.Database("m_market").Collection("accounts"))
+	mongoCredsRepo := persistency.NewMongoDBAccountsRepository(client.Database("accounting-app").Collection("accounts"))
 	bcryptEncrypter := utils.BcryptEncripter{}
 	jwtToken := &utils.JWTTokenManager{}
 	auth := core.NewAuthentication(mongoCredsRepo, bcryptEncrypter, jwtToken)
