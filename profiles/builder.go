@@ -11,7 +11,7 @@ import (
 
 func BuildModule(client *mongo.Client, r *chi.Mux) *core.Module {
 
-	mongoStore := persistency.NewMongoDBProfileStoreRepository(client.Database("accounting-app"))
+	mongoStore := persistency.NewMongoDBProfileStoreRepository(client.Database("accounting-app").Collection("profiles"))
 	users := core.BuildModule(mongoStore)
 
 	//Http Controller

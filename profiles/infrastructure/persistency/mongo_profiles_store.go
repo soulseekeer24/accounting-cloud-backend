@@ -3,6 +3,7 @@ package persistency
 import (
 	"context"
 	"fmt"
+	"piwi-backend-clean/common/persistency"
 	"piwi-backend-clean/profiles/core/domains/profiles"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -11,15 +12,19 @@ import (
 )
 
 type MongoDBProfileStore struct {
-	db *mongo.Database
+	*persistency.MongoDB
+	db *mongo.Collection
 }
 
-func NewMongoDBProfileStoreRepository(db *mongo.Database) *MongoDBProfileStore {
-	return &MongoDBProfileStore{db: db}
+func NewMongoDBProfileStoreRepository(db *mongo.Collection) *MongoDBProfileStore {
+	return &MongoDBProfileStore{
+		db:      db,
+		MongoDB: persistency.NewMongoDBRepo(db),
+	}
 }
 func (s *MongoDBProfileStore) StoreProfile(ctx context.Context, profile *profiles.Profile) (ID string, err error) {
 
-	result, err := s.db.Collection("profiles").InsertOne(ctx, profile)
+	result, err := s.db.InsertOne(ctx, profile)
 	if err != nil {
 		return "", err
 	}
@@ -38,7 +43,7 @@ func (s *MongoDBProfileStore) FindProfileByID(ctx context.Context, ID string) (p
 		return nil, err
 	}
 
-	err = s.db.Collection("profiles").FindOne(ctx, bson.M{"_id": monId}).Decode(&profile)
+	err = s.db.FindOne(ctx, bson.M{"_id": monId}).Decode(&profile)
 	if err != nil {
 		fmt.Println(err)
 		switch err.Error() {
@@ -54,7 +59,7 @@ func (s *MongoDBProfileStore) FindProfileByID(ctx context.Context, ID string) (p
 }
 
 func (s *MongoDBProfileStore) FindProfileByAccountID(ctx context.Context, accountId string) (profile *profiles.Profile, err error) {
-	err = s.db.Collection("profiles").FindOne(ctx, bson.M{"account_id": accountId}).Decode(&profile)
+	err = s.db.FindOne(ctx, bson.M{"account_id": accountId}).Decode(&profile)
 	if err != nil {
 		fmt.Println(err)
 		switch err.Error() {
@@ -69,10 +74,5 @@ func (s *MongoDBProfileStore) FindProfileByAccountID(ctx context.Context, accoun
 	return
 }
 func (s *MongoDBProfileStore) UpdateProfile(ctx context.Context, ID string, profile *profiles.Profile) (success bool, err error) {
-	r, err := s.db.Collection("profiles").UpdateOne(ctx, bson.M{"_id": ID}, profile)
-	if err != nil {
-		return false, err
-	}
-	success = r.ModifiedCount == 1
-	return success, nil
+	return s.Update(ctx, ID, profile)
 }
