@@ -10,27 +10,18 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"piwi-backend-clean/authentication"
-	"piwi-backend-clean/middlewares"
 	"piwi-backend-clean/profiles"
 	"syscall"
 	"time"
 )
 
-const DB_URI = "mongodb://localhost:27017"
+const dbUrl = "mongodb://localhost:27017"
 
 func main() {
-	client, cancel := ConnectMongoDB(DB_URI)
+	client, cancel := ConnectMongoDB(dbUrl)
 	defer cancel()
-r := chi.NewRouter()
-	//AuthenticationModule
-	authModule := authentication.BuildAuthModule(client, r)
-	profiles.BuildModule(client, r)
-
-
-	// Mount middlewares dependencies
-	middlewares.SetAuthModule(authModule)
-
+	r := chi.NewRouter()
+	_ = profiles.BuildModule(client, r)
 	errs := make(chan error, 2)
 
 	go func() {
