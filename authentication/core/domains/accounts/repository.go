@@ -12,4 +12,6 @@ type Repository interface {
 	GetAccountsByUserName(ctx context.Context, username string) (account *Account, err error)
 
 	GetAccountsByValidationHash(ctx context.Context, hash string) (account *Account, err error)
+
+	GetAccountsByEmail(ctx context.Context, email string) (account *Account, err error)
 }

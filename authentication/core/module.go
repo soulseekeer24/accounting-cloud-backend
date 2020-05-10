@@ -2,19 +2,14 @@ package core
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"piwi-backend-clean/authentication/core/domains/accounts"
 	"piwi-backend-clean/authentication/core/dto"
-	"piwi-backend-clean/authentication/core/external"
 )
 
-
-
 type Module struct {
-	AccountsService    *accounts.Service
-	tokenManager  TokenManager
-	profileModule external.ProfileModule
+	AccountsService *accounts.Service
+	tokenManager    TokenManager
 }
 
 func NewAuthentication(accountRepository accounts.Repository, encrypter accounts.Encrypter, tokenManager TokenManager) *Module {
@@ -27,46 +22,18 @@ func NewAuthentication(accountRepository accounts.Repository, encrypter accounts
 }
 
 //RegisterAccounts register a account and sent te profile data to the profiles data.
-func (m *Module) RegisterAccounts(ctx context.Context, register *dto.RegisterUser) (success bool, err error) {
+func (m *Module) RegisterAccounts(ctx context.Context, acc *accounts.Account) (success bool, err error) {
 
-	if register.FirstName == "" {
-		return false, errors.New("firstname missing.")
-	}
-	if register.FirstName == "" {
-		return false, errors.New("lastname missing.")
-	}
-	if register.Email == "" {
-		return false, errors.New("Email missing.")
-	}
-
-	if register.Role == "" {
-		return false, errors.New("Missing Role.")
-
-	}
-
-	keys, err := m.AccountsService.CreateAccount(ctx, register.Username, register.Password)
+	keys, err := m.AccountsService.CreateAccount(ctx, acc)
 	if err != nil {
 		return false, err
 	}
 
-	fmt.Printf("enviar a comunication %v", keys.VerificationHash)
-
-	// Create a profile information and then pass to the profiles module to
-	// create the profile linked to this account
-	newProfile := dto.Profile{
-		AccountID: keys.AccountID,
-		FirstName: register.FirstName,
-		LastName:  register.LastName,
-		Email:     register.Email,
-		Role:      register.Role,
+	if keys != nil {
+		success = true
 	}
 
-	// Comunication between the profile and authentication module to create profile
-	success, err = m.profileModule.CreateProfile(&newProfile)
-	if err != nil {
-		//handle what kind of error cud happend and retry probably
-		// panic(err)
-	}
+	fmt.Printf("enviar a comunication %v \n", keys.VerificationHash)
 
 	return success, err
 }
@@ -77,12 +44,7 @@ func (m *Module) Authenticate(ctx context.Context, loginAccount *dto.LoginAccoun
 		return "", err
 	}
 
-	profile, err := m.profileModule.GetProfileByAccountID(account.ID)
-	if err != nil {
-		return "", err
-	}
-
-	token, err = m.tokenManager.GenerateToken(account, profile.ID)
+	token, err = m.tokenManager.GenerateToken(account)
 	if err != nil {
 		return "", err
 	}
@@ -91,12 +53,10 @@ func (m *Module) Authenticate(ctx context.Context, loginAccount *dto.LoginAccoun
 }
 
 func (m *Module) ValidateAccount(ctx context.Context, hash string) (success bool, err error) {
-	account, err := m.AccountsService.ValidateAccountWithHash(ctx, hash)
+	_, err = m.AccountsService.ValidateAccountWithHash(ctx, hash)
 	if err != nil {
 		return false, err
 	}
-	//Once the acccount its validated we procced to mark the email as valid
-	m.profileModule.ValidateEmail(account.ID)
 
 	return true, nil
 }
@@ -105,6 +65,4 @@ func (m *Module) ValidateToken(ctx context.Context, token string) (claims *Token
 	return m.tokenManager.ValidateToken(token)
 }
 
-func (m *Module) ConnectToProfiles(pm external.ProfileModule) {
-	m.profileModule = pm
-}
+

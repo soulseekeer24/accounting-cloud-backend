@@ -3,8 +3,10 @@ package controllers
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/go-chi/chi"
 	"net/http"
 	"piwi-backend-clean/authentication/core"
+	"piwi-backend-clean/authentication/core/domains/accounts"
 	"piwi-backend-clean/authentication/core/dto"
 )
 
@@ -37,7 +39,7 @@ func (a *AuthenticationHTTP) Signin(w http.ResponseWriter, r *http.Request) {
 
 func (a *AuthenticationHTTP) SignUp(w http.ResponseWriter, r *http.Request) {
 
-	var dto dto.RegisterUser
+	var dto accounts.Account
 
 	err := json.NewDecoder(r.Body).Decode(&dto)
 	if err != nil {
@@ -60,8 +62,8 @@ func (a *AuthenticationHTTP) SignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *AuthenticationHTTP) ValidateAccount(w http.ResponseWriter, r *http.Request) {
-	code := mux.Vars(r)["validation_code"]
 
+	code :=chi.URLParam(r, "validation_code")
 	success, err := a.auth.ValidateAccount(r.Context(), code)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

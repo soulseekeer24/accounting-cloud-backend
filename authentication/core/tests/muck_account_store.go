@@ -3,7 +3,7 @@ package tests
 import (
 	"context"
 	"piwi-backend-clean/authentication/core/domains/accounts"
-	"piwi-backend-clean/common/repositories"
+	"piwi-backend-clean/common/persistency"
 )
 
 // In memory stored
@@ -11,7 +11,7 @@ var AccountsStore map[string]accounts.Account = make(map[string]accounts.Account
 
 //MuckRepository its a muck dependency for testing
 type MuckRepository struct {
-	repositories.InMemory
+	persistency.InMemory
 	SaveAccountFunc                 func(ctx context.Context, cre *accounts.Account) (ID string, err error)
 	GetAccountsByUserNameFunc       func(ctx context.Context, username string) (account *accounts.Account, err error)
 	GetAccountsByValidationHashFunc func(ctx context.Context, hash string) (account *accounts.Account, err error)
@@ -31,7 +31,7 @@ func (r *MuckRepository) GetAccountsByValidationHash(ctx context.Context, hash s
 		}
 	}
 	if account == nil {
-		return nil, accounts.AccountDontExist{}
+		return nil, accounts.ErrAccountDontExist{}
 	}
 
 	return
@@ -40,6 +40,10 @@ func (r *MuckRepository) GetAccountsByValidationHash(ctx context.Context, hash s
 func (r *MuckRepository) UpdateAccount(ctx context.Context, ID string, acc *accounts.Account) (success bool, err error) {
 	AccountsStore[ID] = *acc
 	return true, nil
+}
+
+func (r *MuckRepository) GetAccountsByEmail(ctx context.Context, email string, ) (acc *accounts.Account, err error) {
+	return
 }
 
 //Helper funtion to modify behavior
@@ -55,7 +59,7 @@ func GetAccountsByUserName(ctx context.Context, username string) (account *accou
 		}
 	}
 	if account == nil {
-		return nil, accounts.AccountDontExist{}
+		return nil, accounts.ErrAccountDontExist{}
 	}
 
 	return

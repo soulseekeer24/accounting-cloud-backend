@@ -2,19 +2,22 @@ package persistency
 
 import (
 	"context"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
 	"piwi-backend-clean/authentication/core/domains/accounts"
-	"piwi-backend-clean/common/repositories"
+	"piwi-backend-clean/common"
+	"piwi-backend-clean/common/persistency"
 )
 
 type MongoDBAccountsRepository struct {
-	*repositories.MongoDB
+	*persistency.MongoDB
 	db *mongo.Collection
 }
 
 func NewMongoDBAccountsRepository(db *mongo.Collection) *MongoDBAccountsRepository {
 	return &MongoDBAccountsRepository{
 		db:      db,
-		MongoDB: repositories.NewMongoDBRepo(db),
+		MongoDB: persistency.NewMongoDBRepo(db),
 	}
 }
 
@@ -31,12 +34,15 @@ func (r *MongoDBAccountsRepository) GetAccountsByUserName(ctx context.Context, u
 	account = &accounts.Account{}
 	err = r.GetBy(ctx, query, account)
 	if err != nil {
+		switch err.(type) {
+		case common.ErrDontExist:
+			return nil,accounts.ErrAccountDontExist{}
+		}
 		return nil, err
 	}
-
 	return account, nil
-
 }
+
 func (r *MongoDBAccountsRepository) GetAccountsByValidationHash(ctx context.Context, hash string) (account *accounts.Account, err error) {
 
 	query := bson.M{"validation_hash": hash}
@@ -44,6 +50,25 @@ func (r *MongoDBAccountsRepository) GetAccountsByValidationHash(ctx context.Cont
 
 	err = r.GetBy(ctx, query, account)
 	if err != nil {
+		switch err.(type) {
+		case common.ErrDontExist:
+			return nil,accounts.ErrAccountDontExist{}
+		}
+		return nil, err
+	}
+
+	return account, nil
+}
+
+func (r *MongoDBAccountsRepository) GetAccountsByEmail(ctx context.Context, email string) (account *accounts.Account, err error) {
+	query := bson.M{"email": email}
+	account = &accounts.Account{}
+	err = r.GetBy(ctx, query, account)
+	if err != nil {
+		switch err.(type) {
+		case common.ErrDontExist:
+			return nil,accounts.ErrAccountDontExist{}
+		}
 		return nil, err
 	}
 

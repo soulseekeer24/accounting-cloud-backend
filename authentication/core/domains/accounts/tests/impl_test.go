@@ -2,7 +2,7 @@ package tests
 
 import (
 	"context"
-
+	"piwi-backend-clean/authentication/core/domains/accounts"
 )
 
 func SaveAccount(ctx context.Context, creds *accounts.Account) (ID string, err error) {

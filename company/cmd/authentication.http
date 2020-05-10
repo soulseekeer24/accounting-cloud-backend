@@ -1,0 +1,23 @@
+### SignUp request
+POST http://localhost:8000/auth/signup
+Accept: application/json
+
+{
+  "password":"password",
+  "username":"contador",
+  "email":"contador@correo.com"
+}
+
+### verify account
+GET http://localhost:8000/auth/validate/randomSeed-hash
+
+### Sign in request
+POST http://localhost:8000/auth/signin
+Accept: application/json
+
+{
+  "password":"password",
+  "username":"contador"
+}
+
+

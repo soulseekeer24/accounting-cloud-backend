@@ -19,12 +19,12 @@ var (
 
 //Credetials protect a resource
 type Account struct {
-	ID             string        `json:"username" bson:"_id,omitempty"`
+	ID             string        `json:"id" bson:"_id,omitempty"`
 	Username       string        `json:"username" bson:"username,omitempty"`
 	Password       string        `json:"password" bson:"password,omitempty"`
 	Status         AccountStatus `json:"status" bson:"status,omitempty"`
 	ValidationHash string        `json:"validation_hash" bson:"validation_hash,omitempty"`
-
+	Email          string        `json:"email" bson:"email,omitempty"`
 	// Write register
 	CreatedAt string `json:"created_at" bson:"created_at,omitemty"`
 	UpdatedAt string `json:"updated_at" bson:"updated_at,omitemty"`
