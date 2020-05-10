@@ -1,7 +1,24 @@
 ### Create Profile
 POST http://localhost:8000/profiles
 Content-Type: application/json
+Token:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiNWViNzc4ZjM2ZGE0OWNhZWRiM2NmNTNhIn0.xJqMQPBBfp3rZnXB-2fjRpD3c5LVyHlZyxSU2xG40WA
 
 {
+  "first_name": "miguel",
+  "last_name": "martinez"
+}
 
+### Get account profile
+GET http://localhost:8000/profiles/me
+Content-Type: application/json
+Token:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiNWViNzc4ZjM2ZGE0OWNhZWRiM2NmNTNhIn0.xJqMQPBBfp3rZnXB-2fjRpD3c5LVyHlZyxSU2xG40WA
+
+### Update profile
+POST http://localhost:8000/profiles/5eb77ed1fa41ae3858bbbb26
+Content-Type: application/json
+Token:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2NvdW50X2lkIjoiNWViNzc4ZjM2ZGE0OWNhZWRiM2NmNTNhIn0.xJqMQPBBfp3rZnXB-2fjRpD3c5LVyHlZyxSU2xG40WA
+
+{
+  "first_name": "manuel",
+  "last_name": "martinez"
 }

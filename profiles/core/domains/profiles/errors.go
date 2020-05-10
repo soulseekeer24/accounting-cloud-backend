@@ -32,8 +32,14 @@ func (e MissingParamError) Error() string {
 
 type NoContactsOnProfileError struct {
 }
-
 func (e NoContactsOnProfileError) Error() string {
 	return fmt.Sprintf("profile must have a least 1 contact info")
+}
+
+
+type ErrAccountAlreadyHavePorfile struct {
+}
+func (e ErrAccountAlreadyHavePorfile) Error() string {
+	return fmt.Sprintf("the account already have and profile assigned.")
 }
 
