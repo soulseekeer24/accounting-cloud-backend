@@ -116,6 +116,6 @@ func (s *Service) UpdateProfile(ctx context.Context, profileID string, changes P
 		LastName:  changes.LastName,
 		FirstName: changes.FirstName,
 	}
-
+	update.UpdatedAt = time.Now().Unix()
 	return s.profileStore.UpdateProfile(ctx, profileID, &update)
 }

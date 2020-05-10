@@ -22,14 +22,14 @@ const DB_URI = "mongodb://localhost:27017"
 func main() {
 	client, cancel := ConnectMongoDB(DB_URI)
 	defer cancel()
-r := chi.NewRouter()
+	r := chi.NewRouter()
 	//AuthenticationModule
 	authModule := authentication.BuildAuthModule(client, r)
-	profiles.BuildModule(client, r)
-
+	profilesModules := profiles.BuildModule(client, r)
 
 	// Mount middlewares dependencies
 	middlewares.SetAuthModule(authModule)
+	middlewares.SetProfilesModule(profilesModules)
 
 	errs := make(chan error, 2)
 

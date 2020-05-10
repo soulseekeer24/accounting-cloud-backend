@@ -18,6 +18,11 @@ func BuildModule(client *mongo.Client, r *chi.Mux) *core.Module {
 	httpController := gateway.NewHttpController(users)
 
 	r.Get("/profiles/me",middlewares.IsAuthenticated(httpController.Me))
+	r.Post("/profiles/{profile_id}",
+		 middlewares.IsAuthenticated(
+		 middlewares.IsOwnProfile(httpController.UpdateProfile)))
+
+
 	r.Post("/profiles",middlewares.IsAuthenticated(httpController.CreateProfile))
 
 	return users
