@@ -3,6 +3,7 @@ package utils
 import (
 	"fmt"
 	"golang.org/x/crypto/bcrypt"
+
 )
 
 type BcryptEncripter struct{}
@@ -21,10 +22,5 @@ func (b BcryptEncripter) ValidateHash(original string, underTest string) (succes
 }
 
 func (b BcryptEncripter) GenerateValidationHash(key string, seed string) (hash string, err error) {
-
-	bytes, err  := bcrypt.GenerateFromPassword([]byte(fmt.Sprintf("%v-%v",key,seed)),14)
-	if err != nil {
-		return "",err
-	}
-	return string(bytes), nil
+	return fmt.Sprintf("%v-%v",key,seed), nil
 }

@@ -16,6 +16,20 @@ func NewService(profileStore Store) *Service {
 
 func (s *Service) CreateProfile(ctx context.Context, accountID string, profile *Profile) (ID string, err error) {
 
+	exist,err:= s.profileStore.FindProfileByAccountID(ctx,accountID)
+	if err != nil {
+		switch err.(type) {
+		case ProfileDontFoundError:
+			break
+		default:
+			return "",err
+		}
+	}
+
+	if exist != nil {
+		return "",ErrAccountAlreadyHavePorfile{}
+	}
+
 	profile.AccountID = accountID
 	profile.ID = "" //clear ID
 
@@ -25,8 +39,11 @@ func (s *Service) CreateProfile(ctx context.Context, accountID string, profile *
 	}
 
 	//We set as main a unferevied the first contact info
-	profile.Contacts[0].ItsMain = true
-	profile.Contacts[0].ItsVerified = false
+	if profile.Contacts != nil  && len(profile.Contacts) > 0 {
+		profile.Contacts[0].ItsMain = true
+		profile.Contacts[0].ItsVerified = false
+	}
+
 	profile.CreatedAt = time.Now().Unix()
 	ID, err = s.profileStore.StoreProfile(ctx, profile)
 	if err != nil {

@@ -15,6 +15,9 @@ var authModule *auth.Module
 func SetAuthModule(module *auth.Module) {
 	authModule = module
 }
+type UserLogged struct {
+	AccountID string
+}
 
 func IsAuthenticated(callback func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -26,7 +29,7 @@ func IsAuthenticated(callback func(http.ResponseWriter, *http.Request)) http.Han
 				return
 			}
 			//Add data to context
-			ctx := context.WithValue(r.Context(), "user", claims)
+			ctx := context.WithValue(r.Context(), "user", UserLogged{claims.AccountID})
 			callback(w, r.WithContext(ctx))
 		} else {
 			fmt.Fprintf(w, "no aturoize")

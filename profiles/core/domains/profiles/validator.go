@@ -13,10 +13,5 @@ func (v Validator) ValidateProfile(p *Profile) error {
 		return MissingFirstNameError{}
 	}
 
-
-	if len(p.Contacts) == 0 {
-		return NoContactsOnProfileError{}
-	}
-
 	return nil
 }
