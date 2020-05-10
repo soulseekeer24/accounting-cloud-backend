@@ -16,8 +16,8 @@ func BuildModule(profileStore profiles.Store) *Module {
 	return &m
 }
 
-func (m *Module) CreateNewUserProfile(ctx context.Context, p *profiles.Profile) (ID string, err error) {
-	return m.profileService.CreateProfile(ctx, p)
+func (m *Module) CreateNewUserProfile(ctx context.Context,accountID string, p *profiles.Profile) (ID string, err error) {
+	return m.profileService.CreateProfile(ctx,accountID, p)
 }
 
 func (m *Module) GetAccountProfile(ctx context.Context, accountID string) (profile *profiles.Profile, err error) {

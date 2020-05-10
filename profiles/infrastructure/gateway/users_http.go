@@ -39,19 +39,24 @@ func (a *HttpController) Me(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *HttpController) CreateProfile(w http.ResponseWriter, r *http.Request) {
-	var profile profiles.Profile
-	err := json.NewDecoder(r.Body).Decode(&profile)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+	if user := r.Context().Value("user"); user != nil {
+		var profile profiles.Profile
+		err := json.NewDecoder(r.Body).Decode(&profile)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
-	ID,err := a.users.CreateNewUserProfile(r.Context(),&profile)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+		ID, err := a.users.CreateNewUserProfile(r.Context(), user.(*ReqUser).AccountID, &profile)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 
-	profile.ID = ID
-	json.NewEncoder(w).Encode(profile)
+		profile.ID = ID
+		json.NewEncoder(w).Encode(profile)
+	} else {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte("Not Logged in"))
+	}
 }

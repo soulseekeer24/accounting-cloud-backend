@@ -25,7 +25,7 @@ func main() {
 r := chi.NewRouter()
 	//AuthenticationModule
 	authModule := authentication.BuildAuthModule(client, r)
-	 profiles.BuildModule(client, r)
+	profiles.BuildModule(client, r)
 
 
 	// Mount middlewares dependencies

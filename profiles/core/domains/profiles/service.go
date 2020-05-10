@@ -14,7 +14,11 @@ func NewService(profileStore Store) *Service {
 	return &Service{profileStore: profileStore}
 }
 
-func (s *Service) CreateProfile(ctx context.Context, profile *Profile) (ID string, err error) {
+func (s *Service) CreateProfile(ctx context.Context, accountID string, profile *Profile) (ID string, err error) {
+
+	profile.AccountID = accountID
+	profile.ID = "" //clear ID
+
 	err = s.validator.ValidateProfile(profile)
 	if err != nil {
 		return "", err
