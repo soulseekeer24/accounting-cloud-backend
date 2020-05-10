@@ -37,9 +37,3 @@ func (e NoContactsOnProfileError) Error() string {
 	return fmt.Sprintf("profile must have a least 1 contact info")
 }
 
-type ErrMissinRole struct {
-}
-
-func (e ErrMissinRole) Error() string {
-	return fmt.Sprintf("profile must have a least 1 role")
-}
