@@ -3,6 +3,8 @@ package persistency
 import (
 	"context"
 	"fmt"
+	"piwi-backend-clean/authentication/core/domains/accounts"
+	"piwi-backend-clean/common"
 	"piwi-backend-clean/common/persistency"
 	"piwi-backend-clean/profiles/core/domains/profiles"
 
@@ -22,40 +24,23 @@ func NewMongoDBProfileStoreRepository(db *mongo.Collection) *MongoDBProfileStore
 		MongoDB: persistency.NewMongoDBRepo(db),
 	}
 }
+
 func (s *MongoDBProfileStore) StoreProfile(ctx context.Context, profile *profiles.Profile) (ID string, err error) {
-
-	result, err := s.db.InsertOne(ctx, profile)
-	if err != nil {
-		return "", err
-	}
-
-	if oid, ok := result.InsertedID.(primitive.ObjectID); ok {
-		return oid.Hex(), nil
-	}
-
-	return fmt.Sprintf("%v", result.InsertedID), nil
+	return r.Save(ctx, profile)
 }
 
 func (s *MongoDBProfileStore) FindProfileByID(ctx context.Context, ID string) (profile *profiles.Profile, err error) {
-
-	monId, err := primitive.ObjectIDFromHex(ID)
+	query := bson.M{"_id": ID}
+	profile = &accounts.Account{}
+	err = s.GetBy(ctx, query, profile)
 	if err != nil {
+		switch err.(type) {
+		case common.ErrDontExist:
+			return nil,profiles.ProfileDontFoundError{}
+		}
 		return nil, err
 	}
-
-	err = s.db.FindOne(ctx, bson.M{"_id": monId}).Decode(&profile)
-	if err != nil {
-		fmt.Println(err)
-		switch err.Error() {
-		case "mongo: no documents in result":
-			return nil, profiles.ProfileDontFoundError{}
-		default:
-			return nil, err
-		}
-
-	}
-
-	return
+	return profile, nil
 }
 
 func (s *MongoDBProfileStore) FindProfileByAccountID(ctx context.Context, accountId string) (profile *profiles.Profile, err error) {
@@ -68,11 +53,10 @@ func (s *MongoDBProfileStore) FindProfileByAccountID(ctx context.Context, accoun
 		default:
 			return nil, err
 		}
-
 	}
-
 	return
 }
+
 func (s *MongoDBProfileStore) UpdateProfile(ctx context.Context, ID string, profile *profiles.Profile) (success bool, err error) {
 	return s.Update(ctx, ID, profile)
 }
