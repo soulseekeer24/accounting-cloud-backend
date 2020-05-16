@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	company "piwi-backend-clean/company/cmd/usecases"
 	handler "piwi-backend-clean/company/infra/gateways"
 	"piwi-backend-clean/company/infra/persistence"
-	company "piwi-backend-clean/company/usecases"
 	"syscall"
 )
 

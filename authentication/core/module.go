@@ -32,7 +32,7 @@ func (m *Module) RegisterAccounts(ctx context.Context, acc *accounts.Account) (s
 	if keys != nil {
 		success = true
 	}
-
+	fmt.Println(keys.VerificationHash)
 	fmt.Printf("enviar a comunication %v \n", keys.VerificationHash)
 
 	return success, err

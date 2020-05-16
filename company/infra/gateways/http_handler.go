@@ -4,9 +4,9 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	domain "piwi-backend-clean/company/domain"
+	useCase "piwi-backend-clean/company/cmd/usecases"
+	domain "piwi-backend-clean/company/core/domain"
 	js "piwi-backend-clean/company/infra/serializer"
-	useCase "piwi-backend-clean/company/usecases"
 )
 
 type CompanyHandler interface {
@@ -23,7 +23,8 @@ func NewHandler(useCase useCase.UseCase) CompanyHandler {
 }
 
 func (h *handler) GetAll(w http.ResponseWriter, r *http.Request) {
-	companies, err := h.useCase.FindAll()
+
+	companies, err := h.useCase.FindAll(r.Context())
 	contentType := r.Header.Get("Content-Type")
 
 	if err != nil {
@@ -59,7 +60,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	companyStored, err := h.useCase.Create(company)
+	companyStored, err := h.useCase.Create(r.Context(),company)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)

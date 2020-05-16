@@ -9,7 +9,7 @@ Accept: application/json
 }
 
 ### verify account
-GET http://localhost:8000/auth/validate/randomSeed-hash
+GET http://localhost:8000/auth/validate/contador@correo.com-
 
 ### Sign in request
 POST http://localhost:8000/auth/signin
