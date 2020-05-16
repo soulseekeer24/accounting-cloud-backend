@@ -4,8 +4,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
-	useCase "piwi-backend-clean/company/cmd/usecases"
-	domain "piwi-backend-clean/company/core/domain"
+	"piwi-backend-clean/company/core/interfaces"
+	useCase "piwi-backend-clean/company/core/usecases"
 	js "piwi-backend-clean/company/infra/serializer"
 )
 
@@ -77,7 +77,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 	sendResponse(w, contentType, companyBytes, http.StatusOK)
 }
 
-func (h *handler) serializer(contentType string) domain.Serializer {
+func (h *handler) serializer(contentType string) interfaces.Serializer {
 	return &js.JsonSerializer{}
 }
 

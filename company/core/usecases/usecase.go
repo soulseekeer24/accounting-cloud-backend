@@ -3,10 +3,11 @@ package company
 import (
 	"context"
 	company "piwi-backend-clean/company/core/domain"
+	"piwi-backend-clean/company/core/interfaces"
 )
 
 type useCase struct {
-	repository company.Repository
+	repository interfaces.Repository
 }
 
 type UseCase interface {
@@ -15,6 +16,6 @@ type UseCase interface {
 	FindAll(ctx context.Context) (companies []company.Company, err error)
 }
 
-func NewUseCase(repository company.Repository) UseCase {
+func NewUseCase(repository interfaces.Repository) UseCase {
 	return &useCase{repository: repository}
 }

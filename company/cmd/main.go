@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	company "piwi-backend-clean/company/cmd/usecases"
+	company "piwi-backend-clean/company/core/usecases"
 	handler "piwi-backend-clean/company/infra/gateways"
 	"piwi-backend-clean/company/infra/persistence"
 	"syscall"

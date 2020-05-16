@@ -9,6 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
 	company "piwi-backend-clean/company/core/domain"
+	"piwi-backend-clean/company/core/interfaces"
 	"time"
 )
 
@@ -32,7 +33,7 @@ func newMongoClient(mongoURL string, mongoTimeout int) (*mongo.Client, error) {
 	return client, nil
 }
 
-func NewMongoRepository(mongoURL, mongoDB string, mongoTimeout int) (company.Repository, error) {
+func NewMongoRepository(mongoURL, mongoDB string, mongoTimeout int) (interfaces.Repository, error) {
 	repo := &mongoRepository{
 		timeout:  time.Duration(mongoTimeout) * time.Second,
 		database: mongoDB,
