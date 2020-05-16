@@ -8,7 +8,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
-	company "piwi-backend-clean/company/domain"
+	company "piwi-backend-clean/company/core/domain"
 	"time"
 )
 
@@ -45,10 +45,7 @@ func NewMongoRepository(mongoURL, mongoDB string, mongoTimeout int) (company.Rep
 	return repo, nil
 }
 
-func (m *mongoRepository) GetAll() (companies []company.Company, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
-
+func (m *mongoRepository) GetAll(ctx context.Context) (companies []company.Company, err error) {
 	collection := m.client.Database(m.database).Collection("companies")
 
 	cursor, err := collection.Find(ctx, bson.D{{}}, options.Find())
@@ -63,18 +60,17 @@ func (m *mongoRepository) GetAll() (companies []company.Company, err error) {
 		if err != nil {
 			log.Fatal(err)
 		}
-
+		log.Print("companies")
 		companies = append(companies, company)
 	}
 
 	return companies, nil
 }
 
-func (m *mongoRepository) Find(id string) (company *company.Company, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
+func (m *mongoRepository) Find(ctx context.Context, id string) (company *company.Company, err error) {
 
 	collection := m.client.Database(m.database).Collection("companies")
+
 	filter := bson.M{"id": id}
 
 	err = collection.FindOne(ctx, filter).Decode(&company)
@@ -85,9 +81,7 @@ func (m *mongoRepository) Find(id string) (company *company.Company, err error) 
 
 }
 
-func (m *mongoRepository) Store(company *company.Company) (companyStored *company.Company, err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
+func (m *mongoRepository) Store(ctx context.Context, company *company.Company) (companyStored *company.Company, err error) {
 
 	collection := m.client.Database(m.database).Collection("companies")
 
@@ -108,11 +102,10 @@ func (m *mongoRepository) Store(company *company.Company) (companyStored *compan
 	return company, nil
 }
 
-func (m *mongoRepository) Delete(companyID string) (err error) {
-	ctx, cancel := context.WithTimeout(context.Background(), m.timeout)
-	defer cancel()
+func (m *mongoRepository) Delete(ctx context.Context, companyID string) (err error) {
 
 	id, err := primitive.ObjectIDFromHex(companyID)
+
 	if err != nil {
 		return err
 	}
