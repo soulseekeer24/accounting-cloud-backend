@@ -1,8 +1,8 @@
 package accounting
 
- import (
+import (
 	company "accounting/company/core/usecases"
-	"accounting/company/infra/gateways"
+	companyInfra "accounting/company/infra/gateways"
 	"accounting/company/infra/persistence"
 	"fmt"
 	"github.com/go-chi/chi"
@@ -21,7 +21,7 @@ func main() {
 		log.Fatal(err)
 	}
 	useCase := company.NewUseCase(repo)
-	companyHandler := gateways.NewHandler(useCase)
+	companyHandler := companyInfra.NewHandler(useCase)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)

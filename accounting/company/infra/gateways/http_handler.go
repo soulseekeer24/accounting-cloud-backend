@@ -1,4 +1,4 @@
-package gateways
+package company
 
 import (
 	"accounting/company/core/interfaces"
@@ -9,7 +9,7 @@ import (
 	"net/http"
 )
 
-type CompanyHandler interface {
+type Handler interface {
 	GetAll(http.ResponseWriter, *http.Request)
 	Create(http.ResponseWriter, *http.Request)
 }
@@ -18,7 +18,7 @@ type handler struct {
 	useCase company.UseCase
 }
 
-func NewHandler(useCase company.UseCase) CompanyHandler {
+func NewHandler(useCase company.UseCase) Handler {
 	return &handler{useCase: useCase}
 }
 
