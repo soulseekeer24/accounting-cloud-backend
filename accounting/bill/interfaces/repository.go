@@ -2,7 +2,7 @@ package interfaces
 
 import (
 	"context"
-	bill "piwi-backend-clean/bill/domain"
+	bill "piwi-backend-clean/accounting/bill/domain"
 )
 
 type Repository interface {

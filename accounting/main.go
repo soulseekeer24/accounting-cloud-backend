@@ -1,6 +1,9 @@
-package main
+package accounting
 
-import (
+ import (
+	company "accounting/company/core/usecases"
+	"accounting/company/infra/gateways"
+	"accounting/company/infra/persistence"
 	"fmt"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -8,9 +11,6 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	company "piwi-backend-clean/company/core/usecases"
-	handler "piwi-backend-clean/company/infra/gateways"
-	"piwi-backend-clean/company/infra/persistence"
 	"syscall"
 )
 
@@ -21,7 +21,7 @@ func main() {
 		log.Fatal(err)
 	}
 	useCase := company.NewUseCase(repo)
-	handler := handler.NewHandler(useCase)
+	companyHandler := gateways.NewHandler(useCase)
 
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
@@ -29,8 +29,8 @@ func main() {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 
-	r.Get("/companies", handler.GetAll)
-	r.Post("/companies", handler.Create)
+	r.Get("/companies", companyHandler.GetAll)
+	r.Post("/companies", companyHandler.Create)
 
 	errs := make(chan error, 2)
 

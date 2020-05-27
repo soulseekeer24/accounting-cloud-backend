@@ -1,8 +1,8 @@
 package serializer
 
 import (
+	company "accounting/company/core/domain"
 	"encoding/json"
-	company "piwi-backend-clean/company/core/domain"
 )
 
 type JsonSerializer struct{}

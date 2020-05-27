@@ -3,13 +3,11 @@ package persistency
 import (
 	"context"
 	"fmt"
-	"piwi-backend-clean/authentication/core/domains/accounts"
 	"piwi-backend-clean/common"
 	"piwi-backend-clean/common/persistency"
 	"piwi-backend-clean/profiles/core/domains/profiles"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -26,12 +24,12 @@ func NewMongoDBProfileStoreRepository(db *mongo.Collection) *MongoDBProfileStore
 }
 
 func (s *MongoDBProfileStore) StoreProfile(ctx context.Context, profile *profiles.Profile) (ID string, err error) {
-	return r.Save(ctx, profile)
+	return s.Save(ctx, profile)
 }
 
 func (s *MongoDBProfileStore) FindProfileByID(ctx context.Context, ID string) (profile *profiles.Profile, err error) {
 	query := bson.M{"_id": ID}
-	profile = &accounts.Account{}
+	profile = &profiles.Profile{}
 	err = s.GetBy(ctx, query, profile)
 	if err != nil {
 		switch err.(type) {

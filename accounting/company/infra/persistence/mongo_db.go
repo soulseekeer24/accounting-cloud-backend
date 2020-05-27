@@ -1,6 +1,8 @@
 package persistence
 
 import (
+	company "accounting/company/core/domain"
+	"accounting/company/core/interfaces"
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -8,8 +10,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"log"
-	company "piwi-backend-clean/company/core/domain"
-	"piwi-backend-clean/company/core/interfaces"
 	"time"
 )
 

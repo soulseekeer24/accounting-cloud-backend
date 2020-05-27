@@ -1,12 +1,12 @@
 package gateways
 
 import (
+	"accounting/company/core/interfaces"
+	company "accounting/company/core/usecases"
+	"accounting/company/infra/serializer"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"piwi-backend-clean/company/core/interfaces"
-	useCase "piwi-backend-clean/company/core/usecases"
-	js "piwi-backend-clean/company/infra/serializer"
 )
 
 type CompanyHandler interface {
@@ -15,10 +15,10 @@ type CompanyHandler interface {
 }
 
 type handler struct {
-	useCase useCase.UseCase
+	useCase company.UseCase
 }
 
-func NewHandler(useCase useCase.UseCase) CompanyHandler {
+func NewHandler(useCase company.UseCase) CompanyHandler {
 	return &handler{useCase: useCase}
 }
 
@@ -60,7 +60,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	companyStored, err := h.useCase.Create(r.Context(),company)
+	companyStored, err := h.useCase.Create(r.Context(), company)
 	if err != nil {
 		log.Println(err)
 		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -78,7 +78,7 @@ func (h *handler) Create(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *handler) serializer(contentType string) interfaces.Serializer {
-	return &js.JsonSerializer{}
+	return &serializer.JsonSerializer{}
 }
 
 func sendResponse(w http.ResponseWriter, contentType string, body []byte, statusCode int) {

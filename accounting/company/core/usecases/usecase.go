@@ -1,9 +1,9 @@
 package company
 
 import (
+	company "accounting/company/core/domain"
+	"accounting/company/core/interfaces"
 	"context"
-	company "piwi-backend-clean/company/core/domain"
-	"piwi-backend-clean/company/core/interfaces"
 )
 
 type useCase struct {

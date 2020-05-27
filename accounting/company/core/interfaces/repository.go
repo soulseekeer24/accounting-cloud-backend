@@ -1,8 +1,8 @@
 package interfaces
 
 import (
+	company "accounting/company/core/domain"
 	"context"
-	"piwi-backend-clean/company/core/domain"
 )
 
 type Repository interface {

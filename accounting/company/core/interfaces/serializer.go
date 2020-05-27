@@ -1,10 +1,10 @@
 package interfaces
 
 import (
-	bill "piwi-backend-clean/bill/domain"
+	company "accounting/company/core/domain"
 )
 
 type Serializer interface {
-	Decode(input []byte) (bill *bill.Bill, err error)
+	Decode(input []byte) (company *company.Company,err error)
 	Encode(input interface{}) (bytes []byte, err error)
 }
