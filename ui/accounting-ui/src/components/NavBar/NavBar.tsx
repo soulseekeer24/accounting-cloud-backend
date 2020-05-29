@@ -17,6 +17,7 @@ const NavItem = (props: NavBarItem) => (
         <a className="nav-link" href="/">{props.text}</a>
     </li>);
 
+
 const NavBar = (props: Props) => {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark-custom fixed-top">
