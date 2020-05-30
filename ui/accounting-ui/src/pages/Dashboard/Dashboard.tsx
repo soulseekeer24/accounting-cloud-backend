@@ -2,13 +2,13 @@ import React from 'react'
 import {NavBarItem} from '../../components/NavBar/NavBar'
 import {Footer, NavBar, ContentContainer} from '../../components'
 
-
 const Dashboard = () => {
     const items = [
         {text: "Home", active: true},
         {text: "About", active: false},
         {text: "Services", active: false},
-        {text: "Contact", active: false}
+        {text: "Contact", active: false},
+        {text: "Login", active: false}
     ] as NavBarItem[];
     return (
         <div>
